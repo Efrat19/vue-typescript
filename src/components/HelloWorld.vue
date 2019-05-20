@@ -1,123 +1,111 @@
 <template>
-  <div class="hello">
-    <div class="card">
+    <div class="hello">
+        <div class="card">
 
-      <h5 class="card-header info-color white-text text-center py-4">
-        <strong>Sign up</strong>
-      </h5>
+            <h5 class="card-header info-color white-text text-center py-4">
+                <strong>Sign up</strong>
+            </h5>
 
-      <div class="card-body px-lg-5 pt-0">
+            <div class="card-body px-lg-5 pt-0">
+                <form class="text-center" style="color: #757575;" @submit="submit">
+                    <div class="form-row">
+                        <dynamic-input :input="newForm.input('firstName')"></dynamic-input>
+                        <dynamic-input :input="newForm.input('date')"></dynamic-input>
+                    </div>
 
-        <form class="text-center" style="color: #757575;">
+                    <dynamic-input :input="newForm.input('email')"></dynamic-input>
+                    <dynamic-input :input="newForm.input('password')"></dynamic-input>
+                    <dynamic-input :input="newForm.input('phone')"></dynamic-input>
 
-          <div class="form-row">
-            <input-field @error="onError" @change="setValue($event,'firstName')" name="firstName" rules="required|alpha" _class="md-form" type="text" label="First name"></input-field>
-            <input-field @error="onError"  @change="setValue($event,'date')" name="date" rules="date_format:dd/MM/yyyy" _class="md-form" type="text"
-                         label="Date Of Birth" :adjust="dateToUnix"></input-field>
-          </div>
-          <input-field @error="onError"  @change="setValue($event,'email')" name="email" rules="required|email" _class="md-form mt-0" type="email" label="E mail"></input-field>
-          <input-field @error="onError"  @change="setValue($event,'password')" name="password" rules="required|min:8" _class="md-form" type="password" label="Password"></input-field>
-          <input-field @error="onError"  @change="setValue($event,'phone')" name="phone" :rules="{ required: true, regex: /^(?=.*[0-9])[- +()0-9]+$/ }"
-                       _class="md-form" type="text" label="Phone" :adjust="removePoneSpecialChars"></input-field>
-          <input-field @error="onError"  @change="setValue($event,'subscribe')" name="subscribe" _class="form-check" type="checkbox" label="Subscribe to our newsletter"></input-field>
+                    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0 btn-signup"
+                            type="submit" @click.prevent="submit">Sign in
+                    </button>
 
-          <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0 btn-signup" :disabled="!isOk" type="submit" @click.prevent="signup">Sign in</button>
+                    <social-register></social-register>
+                </form>
+                <div class="msg" v-if="msg">{{msg}}</div>
+            </div>
 
-          <social-register></social-register>
-
-        </form>
-        <div class="msg" v-if="msg">{{msg}}</div>
-      </div>
-
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import inputField from './Input.vue';
-import SocialRegister from './SocialRegister.vue';
+    import {Component, Vue} from 'vue-property-decorator';
+    import inputField from './Input.vue';
+    import SocialRegister from './SocialRegister.vue';
+    import Form from '../entities/Form'
+    import PhoneInput from '../entities/Inputs/PhoneInput';
+    import TextInput from '../entities/Inputs/TextInput';
+    import DateInput from '../entities/Inputs/DateInput';
+    import EmailInput from '../entities/Inputs/EmailInput';
+    import DynamicInput from "./DynamicInput.vue";
 
-@Component({
-  components: {
-    inputField,
-    SocialRegister
-  },
-})
-export default class HelloWorld extends Vue {
-  form:object = {
-    firstName: '',
-    date: '',
-    email: '',
-    password: '',
-    phone: '',
-    subscribe: false,
-  };
-
-  onError(field){
-    this.invalids.push(field);
-  }
-
-  setValid(okField){
-    this.invalids = this.invalids.filter(field => field!==okField);
-  }
-
-  invalids = ['firstName', 'date', 'email', 'password', 'phone'];
-
-  msg:string = '';
-
-  removePoneSpecialChars(phone) {
-    const phoneAllowedChars = ['-', '+', '(', ')', ' '];
-    let clean = phone;
-    phoneAllowedChars.forEach(char =>
-            clean = clean.split(char).join(''));
-    return clean;
-  }
-
-  dateToUnix(date){
-    return new Date(date).getTime() / 1000;
-  }
-
-  setValue(value, key) {
-    this.form[key] = value;
-    this.setValid(key);
-  }
-
-  async signup(){
-    try {
-      const rawResponse = await fetch('https://jsonplaceholder.typicode.com/posts', {
-        method: 'POST',
-        body: JSON.stringify(this.form),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
+    @Component({
+        components: {
+            DynamicInput,
+            inputField,
+            SocialRegister
         },
-      });
-      const Response = await rawResponse.json();
-      console.log(Response);
-      this.msg = 'success!';
-    }
-    catch (e) {
-      this.msg = e;
-    }
-  }
+    })
 
-  get isOk() {
-    return !this.invalids.length;
-  }
-}
+    export default class HelloWorld extends Vue {
+        newForm = new Form({
+            inputs: {
+                firstName: new TextInput({
+                    name: 'firstName',
+                    rules: 'required|alpha',
+                    className: 'md-form',
+                    label: 'First name'
+                }),
+                date: new DateInput({
+                    name: 'date',
+                    rules: 'date_format:dd/MM/yyyy',
+                    className: 'md-form',
+                    label: 'Date of birth'
+                }),
+                email: new EmailInput({
+                    name: 'email',
+                    rules: 'required|email',
+                    className: 'md-form',
+                    label: 'Email'
+                }),
+                password: new TextInput({
+                    name: 'password',
+                    rules: 'required|min:8',
+                    className: 'md-form',
+                    label: 'Password'
+                }),
+                phone: new PhoneInput({
+                    name: 'phone',
+                    rules: {required: true, regex: /^(?=.*[0-9])[- +()0-9]+$/},
+                    className: 'md-form',
+                    label: 'Phone'
+                })
+            },
+            endpoint : 'https://jsonplaceholder.typicode.com/posts',
+            successCallback : () => {
+                console.log("Hello world");
+            }
+        });
+
+        async submit() {
+            this.newForm
+                .validate()
+                .then((success) => {
+                    if (success) {
+                        this.newForm.submit();
+                    }
+                });
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
-  .error {
-    color: red;
-  }
-  .invalid {
-    border-color: red;
-  }
-  .btn-signup {
-    &:hover {
-      background-color: #33b5e5 !important;
-      color: white !important;
+    .btn-signup {
+        &:hover {
+            background-color: #33b5e5 !important;
+            color: white !important;
+        }
     }
-  }
 </style>

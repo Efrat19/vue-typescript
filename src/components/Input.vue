@@ -22,6 +22,10 @@
 
   @Component({
     props: {
+      sharedValidator: {
+        required: false,
+        type : Array
+      },
       _class: String,
       type: String,
       rules: {
@@ -44,6 +48,14 @@
       const isOk = await this.$validator.validate();
 
       return (isOk && this.$emit('change', this.adjust(this.value))) || this.$emit('error', this.name);
+    }
+
+    created(){
+      if(this.sharedValidator){
+        this.sharedValidator.push(this.$validator);
+      }
+
+      console.log(this.sharedValidator);
     }
   }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <HelloWorld class="form" msg="Join the community!"/>
-      <img alt="Vue logo" src="./assets/logo.png" height="100">
+      <!--<img alt="Vue logo" src="./assets/logo.png" height="100">-->
   </div>
 </template>
 
