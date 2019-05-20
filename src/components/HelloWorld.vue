@@ -1,59 +1,181 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <!-- Material form register -->
+    <div class="card">
+
+      <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Sign up</strong>
+      </h5>
+
+      <!--Card content-->
+      <div class="card-body px-lg-5 pt-0">
+
+        <!-- Form -->
+        <form class="text-center" style="color: #757575;">
+
+          <div class="form-row">
+            <div class="col">
+              <!-- First name -->
+              <div class="md-form">
+                <input type="text" id="materialRegisterFormFirstName" name="firstName"
+                       :class="['form-control',{invalid: errors.first('firstName')}]"
+                       v-model="form.firstName" v-validate="'required|alpha'">
+                <label for="materialRegisterFormFirstName">First name</label>
+              </div>
+              <small class="form-text mb-4 error" v-if="errors.first('firstName')">{{ errors.first('firstName') }}</small>
+            </div>
+            <div class="col">
+              <!-- Last name -->
+              <div class="md-form">
+                <input type="text" id="materialRegisterFormLastName" name="date"
+                       :class="['form-control',{invalid: errors.first('date')}]" v-model="form.date" v-validate="'date_format:dd/MM/yyyy'">
+                <label for="materialRegisterFormLastName">date og birth</label>
+                <small class="error" v-if="errors.first('date')">{{ errors.first('date') }}</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- E-mail -->
+          <div class="md-form mt-0">
+            <input type="email" id="materialRegisterFormEmail" name="email"
+                   v-validate="'required|email'" :class="['form-control',{invalid: errors.first('email')}]" v-model="form.email">
+            <label for="materialRegisterFormEmail">E-mail</label>
+            <small class="form-text mb-4 error" v-if="errors.first('email')">{{ errors.first('email') }}</small>
+          </div>
+
+          <!-- Password -->
+          <div class="md-form">
+            <input type="password" id="materialRegisterFormPassword" name="password"
+                   :class="['form-control',{invalid: errors.first('password')}]"
+                   v-validate="'required|min:8'" aria-describedby="materialRegisterFormPasswordHelpBlock" v-model="form.password">
+            <label for="materialRegisterFormPassword">Password</label>
+            <small class="form-text mb-4 error" v-if="errors.first('email')">{{ errors.first('password') }}</small>
+          </div>
+
+          <!-- Phone number -->
+          <div class="md-form">
+            <input type="text" id="materialRegisterFormPhone" name="phone"
+                   :class="['form-control',{invalid: errors.first('phone')}]" v-validate="{ required: true, regex: /^(?=.*[0-9])[- +()0-9]+$/ }"
+                   aria-describedby="materialRegisterFormPhoneHelpBlock" v-model="form.phone">
+            <label for="materialRegisterFormPhone">Phone number</label>
+            <small class="form-text mb-4 error" v-if="errors.first('phone')">{{ errors.first('phone') }}</small>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="form-check">
+            <input type="checkbox" name="subscribe"
+                   :class="['form-control',{invalid: errors.first('subscribe')}]" v-validate="''" id="materialRegisterFormNewsletter" v-model="form.subscribe">
+            <label class="form-check-label" for="materialRegisterFormNewsletter">Subscribe to our newsletter</label>
+            <small class="form-text mb-4 error" v-if="errors.first('phone')">{{ errors.first('subscribe') }}</small>
+          </div>
+
+          <!-- Sign up button -->
+          <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0 btn-signup" type="submit" @click.prevent="attemptSignup">Sign in</button>
+
+          <!-- Social register -->
+          <p>or sign up with:</p>
+
+          <a type="button" class="btn-floating btn-fb btn-sm">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a type="button" class="btn-floating btn-tw btn-sm">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a type="button" class="btn-floating btn-li btn-sm">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a type="button" class="btn-floating btn-git btn-sm">
+            <i class="fab fa-github"></i>
+          </a>
+
+          <hr>
+
+          <!-- Terms of service -->
+          <p>By clicking
+            <em>Sign up</em> you agree to our
+            <a href="" target="_blank">terms of service</a></p>
+
+        </form>
+        <!-- Form -->
+        <div class="msg" v-if="msg">{{msg}}</div>
+      </div>
+
+    </div>
+    <!-- Material form register -->
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import VeeValidate from 'vee-validate';
+
+Vue.use(VeeValidate);
 
 @Component
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+  form:object = {
+    firstName: '',
+    date: '',
+    email: '',
+    password: '',
+    phone: '',
+    subscribe: false,
+  };
+
+  msg:string = '';
+  async attemptSignup(){
+    const isOk = await this.$validator.validate();
+    return isOk && this.signup();
+  }
+
+  removePoneSpecialChars(phone) {
+    const phoneAllowedChars = ['-', '+', '(', ')', ' '];
+    let clean = phone;
+    phoneAllowedChars.forEach(char =>
+            clean = clean.split(char).join(''));
+    return clean;
+  }
+
+  dateToUnix(date){
+    return new Date(date).getTime() / 1000;
+  }
+
+  async signup(){
+    const sentForm = {
+      ...this.form,
+      date: this.dateToUnix(this.form.date),
+      phone: this.removePoneSpecialChars(this.form.phone),
+    }
+    try {
+      const rawResponse = await fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        body: JSON.stringify(sentForm),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      });
+      const Response = await rawResponse.json();
+      console.log(Response);
+      this.msg = 'success!';
+    }
+    catch (e) {
+      this.msg = e;
+    }
+  }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style lang="scss" scoped>
+  .error {
+    color: red;
+  }
+  .invalid {
+    border-color: red;
+  }
+  .btn-signup {
+    &:hover {
+      background-color: #33b5e5 !important;
+      color: white !important;
+    }
+  }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <HelloWorld class="form" msg="Join the community!"/>
+      <img alt="Vue logo" src="./assets/logo.png" height="100">
   </div>
 </template>
 
@@ -17,7 +17,7 @@ import HelloWorld from './components/HelloWorld.vue';
 export default class App extends Vue {}
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,5 +25,9 @@ export default class App extends Vue {}
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+.form {
+  width: 500px;
+  margin: 0 auto;
+}
 }
 </style>
