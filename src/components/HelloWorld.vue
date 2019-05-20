@@ -16,6 +16,7 @@
           <div class="form-row">
             <div class="col">
               <!-- First name -->
+              <!--<input-field name="firstName" rules="required|alpha" _class="md-form" type="text" label="First name"></input-field>-->
               <div class="md-form">
                 <input type="text" id="materialRegisterFormFirstName" name="firstName"
                        :class="['form-control',{invalid: errors.first('firstName')}]"
@@ -108,10 +109,14 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import VeeValidate from 'vee-validate';
-
+import inputField from './Input.vue';
 Vue.use(VeeValidate);
 
-@Component
+@Component({
+  components: {
+    inputField,
+  },
+})
 export default class HelloWorld extends Vue {
   form:object = {
     firstName: '',
