@@ -1,13 +1,16 @@
 <<template>
-  <!-- First name -->
   <div class="col">
-  <div :class="_class">
-    <input :type="type" :id="_uid" :name="name"
-           :value="value" @change="changeValue" v-validate="rules">
-    <label :for="_uid">{{label}}</label>
-  </div>
-  <small class="form-text mb-4 error" v-if="errors.first(name)">{{ errors.first(name) }}</small>
+
+    <div :class="_class">
+      <input :type="type" :id="_uid" :name="name"
+             :class="['form-control',{invalid: errors.first(name)}]"
+             v-model="value" @change="changeValue" v-validate="rules">
+      <label  :for="_uid" >{{label}}</label>
     </div>
+    <small class="form-text mb-4 error" v-if="errors.first(name)">{{ errors.first(name) }}</small>
+
+  </div>
+
 </template>
 
 <script>
@@ -21,17 +24,26 @@
     props: {
       _class: String,
       type: String,
-      rules: String,
+      rules: {
+        type: [String, Object],
+        default: '',
+      },
       name: String,
       label: String,
+      adjust: {
+        type: Function,
+        default: value => value,
+      },
     },
   })
-  export default class App extends Vue {
+  export default class Input extends Vue {
 
     value = '';
-    // computed
-    changeValue(){
 
+    async changeValue() {
+      const isOk = await this.$validator.validate();
+
+      return (isOk && this.$emit('change', this.adjust(this.value))) || this.$emit('error', this.name);
     }
   }
 </script>
